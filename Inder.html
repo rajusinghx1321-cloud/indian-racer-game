@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Indian Street Racer</title>
+<style>
+body {
+  margin:0;
+  overflow:hidden;
+  background:#222;
+}
+
+#game {
+  width:100vw;
+  height:100vh;
+  position:relative;
+  background:url('https://i.imgur.com/7QZ7Z6M.png');
+  background-size:cover;
+}
+
+.car, .police {
+  width:60px;
+  height:100px;
+  position:absolute;
+  bottom:20px;
+}
+
+.car {
+  background:red;
+  left:45%;
+}
+
+.police {
+  background:blue;
+  top:-120px;
+}
+
+#score {
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  color:white;
+  font-size:20px;
+}
+</style>
+</head>
+<body>
+
+<div id="game">
+  <div id="score">Score: 0</div>
+  <div class="car" id="car"></div>
+  <div class="police" id="police"></div>
+</div>
+
+<script>
+let car = document.getElementById("car");
+let police = document.getElementById("police");
+let score = document.getElementById("score");
+
+let carX = window.innerWidth / 2 - 30;
+let policeY = -120;
+let policeX = Math.random() * (window.innerWidth - 60);
+let gameOver = false;
+let scoreNum = 0;
+
+car.style.left = carX + "px";
+police.style.left = policeX + "px";
+
+document.addEventListener("touchmove", function(e){
+  let touchX = e.touches[0].clientX;
+  carX = touchX - 30;
+  car.style.left = carX + "px";
+});
+
+function gameLoop(){
+  if(gameOver) return;
+
+  policeY += 5;
+  police.style.top = policeY + "px";
+
+  scoreNum++;
+  score.innerHTML = "Score: " + scoreNum;
+
+  if(policeY > window.innerHeight){
+    policeY = -120;
+    policeX = Math.random() * (window.innerWidth - 60);
+    police.style.left = policeX + "px";
+  }
+
+  if(
+    carX < policeX + 60 &&
+    carX + 60 > policeX &&
+    window.innerHeight - 120 < policeY + 100
+  ){
+    alert("🚓 Police Caught You!");
+    gameOver = true;
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+
+</body>
+</html>
